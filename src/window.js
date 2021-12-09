@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { PIXEL_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from "./config";
+import {
+	FPS,
+	PIXEL_OFF,
+	PIXEL_ON,
+	PIXEL_SIZE,
+	SCREEN_HEIGHT,
+	SCREEN_WIDTH,
+} from "./config";
+import { drawRect } from "./draw";
 
 export default function Window() {
 	const [windowMatrix, setWindowMatrix] = useState([]);
+	const [clock, setClock] = useState(0);
 	let blankWindow = [];
 
 	//returns a blank window
@@ -16,10 +25,6 @@ export default function Window() {
 			tempWindow.push(temp);
 			temp = [];
 		}
-		tempWindow[0][4] = 1;
-		tempWindow[1][4] = 1;
-		tempWindow[2][4] = 1;
-		tempWindow[3][4] = 1;
 		return tempWindow;
 	}
 
@@ -29,6 +34,34 @@ export default function Window() {
 		blankWindow = getBlankScreen();
 		setWindowMatrix(blankWindow);
 	}, []);
+
+	//clock
+	useEffect(() => {
+		setTimeout(function () {
+			setClock(clock + 1);
+		}, 1000 / FPS);
+		// setClock(clock + 1);
+	}, [clock]);
+
+	// //test animation
+	// useEffect(() => {
+	// 	if (windowMatrix.length) {
+	// 		const nextWindow = windowMatrix;
+	// 		nextWindow[clock % SCREEN_HEIGHT][clock % SCREEN_WIDTH] = 1;
+	// 		setWindowMatrix(nextWindow);
+	// 	}
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, [clock]);
+
+	//test drawing
+	useEffect(() => {
+		if (windowMatrix.length) {
+			drawRect(windowMatrix, setWindowMatrix, 40, 5, 10, 50);
+			drawRect(windowMatrix, setWindowMatrix, 100, 20, 10, 50);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [windowMatrix]);
+
 	return (
 		<>
 			{windowMatrix.map((windowArr) => (
@@ -50,7 +83,8 @@ function Pixel({ state }) {
 				style={{
 					width: PIXEL_SIZE,
 					height: PIXEL_SIZE,
-					backgroundColor: "white",
+					backgroundColor: PIXEL_ON,
+					borderRadius: "50%",
 				}}
 			></div>
 		);
@@ -60,7 +94,8 @@ function Pixel({ state }) {
 				style={{
 					width: PIXEL_SIZE,
 					height: PIXEL_SIZE,
-					backgroundColor: "#202733",
+					backgroundColor: PIXEL_OFF,
+					borderRadius: "50%",
 				}}
 			></div>
 		);
