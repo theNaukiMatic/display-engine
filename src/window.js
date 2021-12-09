@@ -7,7 +7,7 @@ import {
 	SCREEN_HEIGHT,
 	SCREEN_WIDTH,
 } from "./config";
-import { drawRect } from "./draw";
+import { drawCircle, drawRectFilled } from "./draw";
 
 export default function Window() {
 	const [windowMatrix, setWindowMatrix] = useState([]);
@@ -43,21 +43,22 @@ export default function Window() {
 		// setClock(clock + 1);
 	}, [clock]);
 
-	// //test animation
-	// useEffect(() => {
-	// 	if (windowMatrix.length) {
-	// 		const nextWindow = windowMatrix;
-	// 		nextWindow[clock % SCREEN_HEIGHT][clock % SCREEN_WIDTH] = 1;
-	// 		setWindowMatrix(nextWindow);
-	// 	}
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, [clock]);
+	//test animation
+	useEffect(() => {
+		if (windowMatrix.length) {
+			const nextWindow = windowMatrix;
+			nextWindow[clock % SCREEN_HEIGHT][clock % SCREEN_WIDTH] = 1;
+			setWindowMatrix(nextWindow);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [clock]);
 
 	//test drawing
 	useEffect(() => {
 		if (windowMatrix.length) {
-			drawRect(windowMatrix, setWindowMatrix, 40, 5, 10, 50);
-			drawRect(windowMatrix, setWindowMatrix, 100, 20, 10, 50);
+			drawRectFilled(windowMatrix, setWindowMatrix, 40, 5, 10, 50);
+			drawRectFilled(windowMatrix, setWindowMatrix, 100, 20, 10, 50);
+			drawCircle(windowMatrix, setWindowMatrix, 100, 20, 10);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [windowMatrix]);
